@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -34,6 +34,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .header h1 {
@@ -49,6 +51,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .header .user-info span {
@@ -78,7 +81,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 25px;
@@ -116,7 +119,8 @@
         }
 
         .admin-form input,
-        .admin-form textarea {
+        .admin-form textarea,
+        .admin-form select {
             padding: 12px 16px;
             border: 2px solid #ddd;
             border-radius: 12px;
@@ -126,7 +130,8 @@
         }
 
         .admin-form input:focus,
-        .admin-form textarea:focus {
+        .admin-form textarea:focus,
+        .admin-form select:focus {
             border-color: #0f3460;
             outline: none;
             box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
@@ -143,21 +148,12 @@
             gap: 8px;
         }
 
-        .file-upload-wrapper .file-input-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
         .file-upload-wrapper input[type="file"] {
-            flex: 1;
             padding: 10px;
             border: 2px dashed #0f3460;
             border-radius: 12px;
             background: #f8f9fa;
             cursor: pointer;
-            min-width: 200px;
         }
 
         .file-upload-wrapper .preview-container {
@@ -194,10 +190,51 @@
             box-shadow: 0 8px 25px rgba(15, 52, 96, 0.3);
         }
 
+        .btn-update {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .btn-update:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-cancel {
+            background: #95a5a6;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .btn-cancel:hover {
+            background: #7f8c8d;
+            transform: scale(1.02);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+        }
+
         /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -230,7 +267,7 @@
 
         /* Product List */
         .product-list {
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             margin-top: 12px;
         }
@@ -244,11 +281,14 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .product-item .info {
             display: flex;
             flex-direction: column;
+            flex: 1;
         }
 
         .product-item .info .name {
@@ -265,6 +305,21 @@
         .product-item .actions {
             display: flex;
             gap: 8px;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+            transform: scale(1.05);
         }
 
         .btn-delete {
@@ -309,6 +364,11 @@
         .order-item .order-info .order-product {
             font-size: 0.9rem;
             color: #555;
+        }
+
+        .order-item .order-info .payment-method {
+            font-size: 0.8rem;
+            color: #888;
         }
 
         .status-badge {
@@ -379,17 +439,77 @@
             border-left: 6px solid #e74c3c;
         }
 
-        @media (max-width: 768px) {
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .modal-content .modal-title i {
+            color: #f39c12;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 1024px) {
             .grid-2col {
                 grid-template-columns: 1fr;
             }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
             .header {
                 flex-direction: column;
-                gap: 15px;
                 text-align: center;
             }
             .stats-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
+            }
+            .form-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -422,18 +542,22 @@
                             <h3>Total Pesanan</h3>
                             <p id="totalOrders">0</p>
                         </div>
-                    </div>
-                    <div style="padding:12px 16px; background:#eef2f7; border-radius:12px;">
-                        <h4 style="margin-bottom:4px;"><i class="fas fa-chart-line"></i> Laporan Keuangan</h4>
-                        <p style="font-size:1.8rem; font-weight:800; color:#0f3460;" id="financialReport">Rp 0</p>
-                        <small style="color:#666;">Total pendapatan dari pesanan selesai</small>
+                        <div class="stat-item">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Pendapatan</h3>
+                            <p id="financialReport">Rp 0</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Form Tambah Produk -->
+                <!-- Form Tambah/Edit Produk -->
                 <div class="card">
-                    <div class="card-title"><i class="fas fa-plus-circle"></i> Tambah Produk Baru</div>
+                    <div class="card-title" id="formTitle">
+                        <i class="fas fa-plus-circle"></i> Tambah Produk Baru
+                    </div>
                     <form class="admin-form" id="productForm">
+                        <input type="hidden" id="editId" value="" />
+
                         <label><i class="fas fa-tag"></i> Nama Produk</label>
                         <input type="text" id="prodName" placeholder="Contoh: Smartphone Pro Max" required />
 
@@ -445,7 +569,7 @@
 
                         <label><i class="fas fa-image"></i> Upload Gambar Produk</label>
                         <div class="file-upload-wrapper">
-                            <input type="file" id="prodImage" accept="image/*" required />
+                            <input type="file" id="prodImage" accept="image/*" />
                             <div class="preview-container" id="imagePreview"></div>
                         </div>
 
@@ -455,9 +579,14 @@
                             <div class="preview-container" id="videoPreview"></div>
                         </div>
 
-                        <button type="submit" class="btn-save">
-                            <i class="fas fa-save"></i> Simpan Produk
-                        </button>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save" id="submitBtn">
+                                <i class="fas fa-save"></i> Simpan Produk
+                            </button>
+                            <button type="button" class="btn-cancel" id="cancelEditBtn" style="display:none;">
+                                <i class="fas fa-times"></i> Batal Edit
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -503,7 +632,6 @@
             }
 
             if (products.length === 0) {
-                // Data demo dengan base64 (contoh kecil)
                 products = [{
                     id: 1,
                     name: 'Smartphone Pro Max',
@@ -523,12 +651,15 @@
             }
 
             if (orders.length === 0) {
-                orders = [
-                    { id: 1, items: [{ productName: 'Smartphone Pro Max', qty: 1, price: 12000000 }], total: 12000000,
-                        status: 'unpaid', buyer: 'Customer A', date: new Date().toLocaleString() },
-                    { id: 2, items: [{ productName: 'Laptop Ultra Gamer', qty: 1, price: 25000000 }], total: 25000000,
-                        status: 'shipped', buyer: 'Customer B', date: new Date().toLocaleString() },
-                ];
+                orders = [{
+                    id: 1,
+                    items: [{ productName: 'Smartphone Pro Max', qty: 1, price: 12000000 }],
+                    total: 12000000,
+                    status: 'unpaid',
+                    buyer: 'Customer A',
+                    paymentMethod: 'Transfer Bank (BCA)',
+                    date: new Date().toLocaleString()
+                }];
                 saveData();
             }
         }
@@ -585,6 +716,9 @@
                             <span class="price">${formatRupiah(p.price)}</span>
                         </div>
                         <div class="actions">
+                            <button class="btn-edit" data-id="${p.id}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
                             <button class="btn-delete" data-id="${p.id}">
                                 <i class="fas fa-trash"></i> Hapus
                             </button>
@@ -592,14 +726,20 @@
                     </div>
                 `).join('');
 
+            // Event Edit
+            container.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    editProduct(id);
+                });
+            });
+
+            // Event Hapus
             container.querySelectorAll('.btn-delete').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
-                    if (confirm('Hapus produk ini?')) {
-                        products = products.filter(p => p.id !== id);
-                        saveData();
-                        renderAll();
-                        showToast('Produk berhasil dihapus!', 'success');
+                    if (confirm('Yakin ingin menghapus produk ini?')) {
+                        deleteProduct(id);
                     }
                 });
             });
@@ -628,6 +768,9 @@
                             <div class="order-info">
                                 <span class="order-id">#${o.id}</span>
                                 <span class="order-product">${productNames}</span>
+                                <span class="payment-method">
+                                    <i class="fas fa-credit-card"></i> ${o.paymentMethod || 'Transfer Bank'}
+                                </span>
                                 <span style="font-size:0.8rem; color:#888;">${o.date || ''}</span>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -666,8 +809,81 @@
         }
 
         // ================================================================
-        // FORM: TAMBAH PRODUK (DENGAN UPLOAD)
+        // CRUD: TAMBAH, EDIT, HAPUS
         // ================================================================
+
+        // --- EDIT ---
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('editId').value = id;
+            document.getElementById('prodName').value = product.name;
+            document.getElementById('prodDesc').value = product.desc;
+            document.getElementById('prodPrice').value = product.price;
+
+            // Preview gambar
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = '';
+            if (product.image) {
+                const img = document.createElement('img');
+                img.src = product.image;
+                imagePreview.appendChild(img);
+            }
+
+            // Preview video
+            const videoPreview = document.getElementById('videoPreview');
+            videoPreview.innerHTML = '';
+            if (product.video) {
+                const video = document.createElement('video');
+                video.src = product.video;
+                video.controls = true;
+                video.style.maxWidth = '120px';
+                video.style.maxHeight = '120px';
+                video.style.borderRadius = '10px';
+                videoPreview.appendChild(video);
+            }
+
+            // Ubah tombol
+            document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Produk';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Produk';
+            document.getElementById('submitBtn').className = 'btn-update';
+            document.getElementById('cancelEditBtn').style.display = 'block';
+
+            // Scroll ke form
+            document.getElementById('productForm').scrollIntoView({ behavior: 'smooth' });
+
+            showToast('📝 Sedang mengedit: ' + product.name, 'success');
+        }
+
+        // --- DELETE ---
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveData();
+            renderAll();
+            showToast('🗑️ Produk berhasil dihapus!', 'error');
+        }
+
+        // --- CANCEL EDIT ---
+        document.getElementById('cancelEditBtn').addEventListener('click', function() {
+            resetForm();
+        });
+
+        function resetForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('productForm').reset();
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('videoPreview').innerHTML = '';
+            document.getElementById('formTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Tambah Produk Baru';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Simpan Produk';
+            document.getElementById('submitBtn').className = 'btn-save';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        // ================================================================
+        // FORM: TAMBAH/EDIT PRODUK
+        // ================================================================
+
         // Preview Gambar
         document.getElementById('prodImage').addEventListener('change', function(e) {
             const container = document.getElementById('imagePreview');
@@ -704,41 +920,90 @@
             }
         });
 
-        // Submit Form
+        // Submit Form (Tambah atau Update)
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            const editId = document.getElementById('editId').value;
             const name = document.getElementById('prodName').value.trim();
             const desc = document.getElementById('prodDesc').value.trim();
             const price = parseInt(document.getElementById('prodPrice').value);
             const imageFile = document.getElementById('prodImage').files[0];
             const videoFile = document.getElementById('prodVideo').files[0];
 
-            if (!name || !desc || !price || !imageFile) {
-                showToast('Harap isi semua field dan upload gambar!', 'error');
+            if (!name || !desc || !price) {
+                showToast('Harap isi semua field!', 'error');
                 return;
             }
 
-            // Baca file gambar & video sebagai base64
-            const imageReader = new FileReader();
-            imageReader.onload = function(e) {
-                const imageData = e.target.result;
+            if (editId) {
+                // MODE EDIT
+                const product = products.find(p => p.id === parseInt(editId));
+                if (!product) return;
 
-                if (videoFile) {
-                    const videoReader = new FileReader();
-                    videoReader.onload = function(e2) {
-                        const videoData = e2.target.result;
-                        saveProduct(name, desc, price, imageData, videoData);
+                // Update data
+                product.name = name;
+                product.desc = desc;
+                product.price = price;
+
+                // Jika ada gambar baru, upload
+                if (imageFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        product.image = e.target.result;
+                        finishEdit();
                     };
-                    videoReader.readAsDataURL(videoFile);
+                    reader.readAsDataURL(imageFile);
                 } else {
-                    saveProduct(name, desc, price, imageData, null);
+                    finishEdit();
                 }
-            };
-            imageReader.readAsDataURL(imageFile);
+
+                // Jika ada video baru
+                if (videoFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        product.video = e.target.result;
+                        finishEdit();
+                    };
+                    reader.readAsDataURL(videoFile);
+                } else {
+                    finishEdit();
+                }
+
+                function finishEdit() {
+                    saveData();
+                    renderAll();
+                    resetForm();
+                    showToast(`✅ Produk "${name}" berhasil diupdate!`, 'success');
+                }
+
+            } else {
+                // MODE TAMBAH
+                if (!imageFile) {
+                    showToast('Harap upload gambar produk!', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+
+                    if (videoFile) {
+                        const videoReader = new FileReader();
+                        videoReader.onload = function(e2) {
+                            const videoData = e2.target.result;
+                            saveNewProduct(name, desc, price, imageData, videoData);
+                        };
+                        videoReader.readAsDataURL(videoFile);
+                    } else {
+                        saveNewProduct(name, desc, price, imageData, null);
+                    }
+                };
+                reader.readAsDataURL(imageFile);
+            }
         });
 
-        function saveProduct(name, desc, price, imageData, videoData) {
+        function saveNewProduct(name, desc, price, imageData, videoData) {
             const newProduct = {
                 id: generateId(),
                 name: name,
@@ -751,9 +1016,7 @@
             products.push(newProduct);
             saveData();
             renderAll();
-            document.getElementById('productForm').reset();
-            document.getElementById('imagePreview').innerHTML = '';
-            document.getElementById('videoPreview').innerHTML = '';
+            resetForm();
             showToast(`✅ Produk "${name}" berhasil ditambahkan!`, 'success');
         }
 
@@ -793,7 +1056,6 @@
         loadData();
         renderAll();
 
-        // Auto refresh data antar tab
         window.addEventListener('storage', function(e) {
             if (e.key && e.key.startsWith('gadgetstore_')) {
                 loadData();
