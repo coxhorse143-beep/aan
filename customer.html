@@ -105,7 +105,6 @@
             color: #0f3460;
         }
 
-        /* Catalog Grid */
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -183,7 +182,6 @@
             box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
         }
 
-        /* Cart */
         .cart-item {
             display: flex;
             justify-content: space-between;
@@ -283,7 +281,6 @@
             box-shadow: 0 6px 25px rgba(46, 204, 113, 0.3);
         }
 
-        /* Orders */
         .order-item {
             padding: 12px 0;
             border-bottom: 1px solid #eee;
@@ -398,7 +395,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="header">
             <h1><i class="fas fa-store-alt"></i> GadgetStore</h1>
             <div class="user-info">
@@ -407,9 +403,8 @@
             </div>
         </div>
 
-        <!-- GRID -->
         <div class="grid-2col">
-            <!-- KOLOM KIRI: Katalog -->
+            <!-- KOLOM KIRI -->
             <div>
                 <div class="card">
                     <div class="card-title"><i class="fas fa-th-large"></i> Katalog Produk</div>
@@ -417,26 +412,58 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: Keranjang + Pesanan -->
+            <!-- KOLOM KANAN -->
             <div>
                 <!-- Keranjang -->
                 <div class="card" style="margin-bottom:20px;">
                     <div class="card-title"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</div>
                     <div id="cartItems"></div>
 
-                    <!-- Metode Pembayaran -->
+                    <!-- METODE PEMBAYARAN LENGKAP -->
                     <div class="payment-method">
-                        <label><i class="fas fa-credit-card"></i> Metode Pembayaran</label>
+                        <label><i class="fas fa-credit-card"></i> Pilih Metode Pembayaran</label>
                         <select id="paymentMethod">
-                            <option value="Transfer Bank (BCA)">🏦 Transfer Bank BCA</option>
-                            <option value="Transfer Bank (Mandiri)">🏦 Transfer Bank Mandiri</option>
-                            <option value="Transfer Bank (BNI)">🏦 Transfer Bank BNI</option>
-                            <option value="Transfer Bank (BRI)">🏦 Transfer Bank BRI</option>
-                            <option value="E-Wallet (GoPay)">📱 GoPay</option>
-                            <option value="E-Wallet (OVO)">📱 OVO</option>
-                            <option value="E-Wallet (DANA)">📱 DANA</option>
-                            <option value="E-Wallet (LinkAja)">📱 LinkAja</option>
-                            <option value="COD (Bayar di Tempat)">📦 COD (Bayar di Tempat)</option>
+                            <optgroup label="🏦 Transfer Bank">
+                                <option value="Transfer Bank (BCA)">BCA</option>
+                                <option value="Transfer Bank (Mandiri)">Mandiri</option>
+                                <option value="Transfer Bank (BNI)">BNI</option>
+                                <option value="Transfer Bank (BRI)">BRI</option>
+                                <option value="Transfer Bank (BTN)">BTN</option>
+                                <option value="Transfer Bank (CIMB Niaga)">CIMB Niaga</option>
+                                <option value="Transfer Bank (Danamon)">Danamon</option>
+                                <option value="Transfer Bank (Permata)">Permata</option>
+                                <option value="Transfer Bank (Maybank)">Maybank</option>
+                                <option value="Transfer Bank (OCBC NISP)">OCBC NISP</option>
+                                <option value="Transfer Bank (HSBC)">HSBC</option>
+                            </optgroup>
+                            <optgroup label="📱 E-Wallet">
+                                <option value="E-Wallet (GoPay)">GoPay</option>
+                                <option value="E-Wallet (OVO)">OVO</option>
+                                <option value="E-Wallet (DANA)">DANA</option>
+                                <option value="E-Wallet (LinkAja)">LinkAja</option>
+                                <option value="E-Wallet (ShopeePay)">ShopeePay</option>
+                                <option value="E-Wallet (Sakuku)">Sakuku (BCA)</option>
+                                <option value="E-Wallet (QRIS)">QRIS (Semua Aplikasi)</option>
+                            </optgroup>
+                            <optgroup label="💳 Kartu Kredit/Debit">
+                                <option value="Kartu Kredit (Visa)">Visa</option>
+                                <option value="Kartu Kredit (Mastercard)">Mastercard</option>
+                                <option value="Kartu Kredit (JCB)">JCB</option>
+                                <option value="Kartu Kredit (American Express)">American Express</option>
+                                <option value="Kartu Debit (Semua Bank)">Kartu Debit (Semua Bank)</option>
+                            </optgroup>
+                            <optgroup label="🏪 Minimart">
+                                <option value="Minimart (Indomaret)">Indomaret</option>
+                                <option value="Minimart (Alfamart)">Alfamart</option>
+                                <option value="Minimart (Lawson)">Lawson</option>
+                                <option value="Minimart (Circle K)">Circle K</option>
+                            </optgroup>
+                            <optgroup label="📦 Lainnya">
+                                <option value="COD (Bayar di Tempat)">COD (Bayar di Tempat)</option>
+                                <option value="PayLater (Bayar Nanti)">PayLater (Bayar Nanti)</option>
+                                <option value="Cicilan (0% Bunga)">Cicilan 0% Bunga</option>
+                                <option value="Kripto (BTC/ETH)">Kripto (BTC/ETH)</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -604,7 +631,7 @@
         }
 
         // ================================================================
-        // CHECKOUT DENGAN METODE PEMBAYARAN
+        // CHECKOUT DENGAN METODE PEMBAYARAN LENGKAP
         // ================================================================
         function checkout() {
             if (cart.length === 0) {
@@ -645,7 +672,7 @@
         }
 
         // ================================================================
-        // RENDER ORDERS (Customer View)
+        // RENDER ORDERS
         // ================================================================
         function renderOrders() {
             const container = document.getElementById('orderList');
