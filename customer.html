@@ -34,6 +34,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .header h1 {
@@ -49,6 +51,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .header .user-info span {
@@ -78,7 +81,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 25px;
@@ -238,6 +241,29 @@
             border-top: 2px solid #ddd;
         }
 
+        .payment-method {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .payment-method label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+
+        .payment-method select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+        }
+
         .btn-checkout {
             background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
@@ -249,7 +275,7 @@
             cursor: pointer;
             transition: 0.3s;
             width: 100%;
-            margin-top: 12px;
+            margin-top: 8px;
         }
 
         .btn-checkout:hover {
@@ -271,6 +297,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .order-item .order-header .order-id {
@@ -307,6 +335,12 @@
             font-size: 0.85rem;
             color: #555;
             margin-top: 4px;
+        }
+
+        .order-item .payment-method-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 2px;
         }
 
         .empty-msg {
@@ -358,7 +392,6 @@
             .header {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
             }
         }
     </style>
@@ -390,9 +423,26 @@
                 <div class="card" style="margin-bottom:20px;">
                     <div class="card-title"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</div>
                     <div id="cartItems"></div>
+
+                    <!-- Metode Pembayaran -->
+                    <div class="payment-method">
+                        <label><i class="fas fa-credit-card"></i> Metode Pembayaran</label>
+                        <select id="paymentMethod">
+                            <option value="Transfer Bank (BCA)">🏦 Transfer Bank BCA</option>
+                            <option value="Transfer Bank (Mandiri)">🏦 Transfer Bank Mandiri</option>
+                            <option value="Transfer Bank (BNI)">🏦 Transfer Bank BNI</option>
+                            <option value="Transfer Bank (BRI)">🏦 Transfer Bank BRI</option>
+                            <option value="E-Wallet (GoPay)">📱 GoPay</option>
+                            <option value="E-Wallet (OVO)">📱 OVO</option>
+                            <option value="E-Wallet (DANA)">📱 DANA</option>
+                            <option value="E-Wallet (LinkAja)">📱 LinkAja</option>
+                            <option value="COD (Bayar di Tempat)">📦 COD (Bayar di Tempat)</option>
+                        </select>
+                    </div>
+
                     <div class="cart-total" id="cartTotal">Total: Rp 0</div>
                     <button class="btn-checkout" id="checkoutBtn">
-                        <i class="fas fa-credit-card"></i> Checkout
+                        <i class="fas fa-credit-card"></i> Checkout Sekarang
                     </button>
                 </div>
 
@@ -554,13 +604,15 @@
         }
 
         // ================================================================
-        // CHECKOUT
+        // CHECKOUT DENGAN METODE PEMBAYARAN
         // ================================================================
         function checkout() {
             if (cart.length === 0) {
                 showToast('Keranjang kosong!', 'error');
                 return;
             }
+
+            const paymentMethod = document.getElementById('paymentMethod').value;
 
             let total = 0;
             const items = [];
@@ -578,6 +630,7 @@
                 total: total,
                 status: 'unpaid',
                 buyer: 'Customer',
+                paymentMethod: paymentMethod,
                 date: new Date().toLocaleString()
             };
 
@@ -585,7 +638,10 @@
             cart = [];
             saveData();
             renderAll();
-            showToast('✅ Checkout berhasil! Total: ' + formatRupiah(total), 'success');
+            showToast(
+                `✅ Checkout berhasil!\nTotal: ${formatRupiah(total)}\nMetode: ${paymentMethod}`,
+                'success'
+            );
         }
 
         // ================================================================
@@ -606,7 +662,6 @@
                 done: { label: 'Selesai', cls: 'status-done' }
             };
 
-            // Tampilkan semua pesanan (customer bisa lihat semua)
             const sorted = [...orders].reverse();
             container.innerHTML = sorted.map(o => {
                 const st = statusMap[o.status] || statusMap.unpaid;
@@ -619,7 +674,12 @@
                             </div>
                             <div class="order-detail">
                                 ${productNames} • ${formatRupiah(o.total)}
-                                <br/><small style="color:#888;">${o.date || ''}</small>
+                            </div>
+                            <div class="payment-method-label">
+                                <i class="fas fa-credit-card"></i> ${o.paymentMethod || 'Transfer Bank'}
+                            </div>
+                            <div style="font-size:0.75rem; color:#888; margin-top:2px;">
+                                ${o.date || ''}
                             </div>
                         </div>
                     `;
