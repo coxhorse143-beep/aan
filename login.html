@@ -1,1 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - GadgetStore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #0f3460, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #1a1a2e;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .login-container h1 i {
+            color: #f1c40f;
+            margin-right: 10px;
+        }
+
+        .login-container .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .role-selector button {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+
+        .role-selector button i {
+            margin-right: 8px;
+        }
+
+        .role-selector button.active {
+            border-color: #0f3460;
+            background: #0f3460;
+            color: white;
+            box-shadow: 0 4px 15px rgba(15, 52, 96, 0.3);
+        }
+
+        .role-selector button:hover:not(.active) {
+            background: #e9ecef;
+            transform: scale(1.02);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #0f3460;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0f3460, #1a1a2e);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(15, 52, 96, 0.4);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .info-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .info-text strong {
+            color: #0f3460;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a2e;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 16px;
+            font-weight: 600;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.error {
+            border-left: 6px solid #e74c3c;
+        }
+
+        .toast.success {
+            border-left: 6px solid #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1><i class="fas fa-store"></i> GadgetStore</h1>
+        <p class="subtitle">Silakan login untuk melanjutkan</p>
+
+        <div class="role-selector">
+            <button id="btnAdmin" class="active">
+                <i class="fas fa-user-cog"></i> Admin
+            </button>
+            <button id="btnCustomer">
+                <i class="fas fa-user"></i> Customer
+            </button>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Username / Email</label>
+                <input type="text" id="username" placeholder="Masukkan username" required />
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required />
+            </div>
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+
+        <div class="info-text">
+            <p><strong>Admin:</strong> admin / admin123</p>
+            <p><strong>Customer:</strong> customer / customer123</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let selectedRole = 'admin';
+
+        document.getElementById('btnAdmin').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('btnCustomer').classList.remove('active');
+            selectedRole = 'admin';
+        });
+
+        document.getElementById('btnCustomer').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('btnAdmin').classList.remove('active');
+            selectedRole = 'customer';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Validasi sederhana
+            if (selectedRole === 'admin') {
+                if (username === 'admin' && password === 'admin123') {
+                    localStorage.setItem('gadgetstore_user', JSON.stringify({
+                        role: 'admin',
+                        username: username
+                    }));
+                    window.location.href = 'admin.html';
+                } else {
+                    showToast('❌ Username atau password Admin salah!', 'error');
+                }
+            } else {
+                if (username === 'customer' && password === 'customer123') {
+                    localStorage.setItem('gadgetstore_user', JSON.stringify({
+                        role: 'customer',
+                        username: username
+                    }));
+                    window.location.href = 'customer.html';
+                } else {
+                    showToast('❌ Username atau password Customer salah!', 'error');
+                }
+            }
+        });
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.classList.remove('show'); }, 3000);
+        }
+
+        // Jika sudah login, redirect ke halaman masing-masing
+        window.addEventListener('load', function() {
+            const userData = localStorage.getItem('gadgetstore_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else if (user.role === 'customer') {
+                        window.location.href = 'customer.html';
+                    }
+                } catch (e) {}
+            }
+        });
+    </script>
+</body>
+</html>
