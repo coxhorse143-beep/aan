@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GadgetStore Management System</title>
+  <style>
+    body {font-family: Arial, sans-serif; background: #f4f6f9; margin: 0;}
+    header {background: #2c3e50; color: #fff; text-align: center; padding: 20px; font-size: 24px; font-weight: bold;}
+    .container {display: flex; flex-wrap: wrap; justify-content: space-around; margin: 20px;}
+    .card {background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 10px; padding: 20px; margin: 10px; flex: 1 1 45%;}
+    h2 {color: #34495e;}
+    form input, form textarea, form button {display: block; width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #ccc;}
+    form button {background: #27ae60; color: #fff; font-weight: bold; cursor: pointer;}
+    .catalog {display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;}
+    .product {border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; background: #fafafa;}
+    .product img {max-width: 100%; border-radius: 8px;}
+    .product h3 {margin: 10px 0; color: #2c3e50;}
+    .price {font-weight: bold; color: #e74c3c;}
+    .product video {width: 100%; margin: 10px 0; border-radius: 8px;}
+    .product a {display: inline-block; margin-top: 10px; padding: 10px 15px; background: #2980b9; color: #fff; text-decoration: none; border-radius: 5px;}
+    .status {margin-top: 15px; font-size: 14px; color: #555;}
+  </style>
+</head>
+<body>
+  <header>GadgetStore Management System</header>
+
+  <div class="container">
+    <!-- Panel Admin -->
+    <div class="card">
+      <h2>Panel Admin</h2>
+      <form id="adminForm">
+        <label>Nama Produk:</label>
+        <input type="text" id="namaProduk" placeholder="Masukkan nama produk" required>
+
+        <label>Deskripsi & Harga:</label>
+        <textarea id="deskripsiProduk" placeholder="Masukkan deskripsi dan harga produk" required></textarea>
+
+        <label>URL Gambar Produk:</label>
+        <input type="text" id="urlGambar" placeholder="Masukkan URL gambar produk" required>
+
+        <button type="submit">Simpan Produk ke Database</button>
+      </form>
+    </div>
+
+    <!-- Panel Customer -->
+    <div class="card">
+      <h2>Panel Pembeli</h2>
+      <div class="catalog">
+        <!-- Produk 1 -->
+        <div class="product">
+          <img src="https://via.placeholder.com/250x150" alt="Smartphone Premium">
+          <h3>Smartphone Premium</h3>
+          <p class="price">Rp 12.000.000</p>
+          <p>Layar 120Hz, RAM 12GB, Kamera 108MP</p>
+          <video controls>
+            <source src="demo-smartphone.mp4" type="video/mp4">
+          </video>
+          <a href="#" class="buyBtn">Beli Sekarang</a>
+          <div class="status">Status Pesanan: Belum Dibayar</div>
+        </div>
+
+        <!-- Produk 2 -->
+        <div class="product">
+          <img src="https://via.placeholder.com/250x150" alt="Laptop Ultra">
+          <h3>Laptop Ultra</h3>
+          <p class="price">Rp 18.000.000</p>
+          <p>Intel i9, RAM 32GB, SSD 1TB</p>
+          <video controls>
+            <source src="demo-laptop.mp4" type="video/mp4">
+          </video>
+          <a href="#" class="buyBtn">Beli Sekarang</a>
+          <div class="status">Status Pesanan: Diproses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tombol Admin
+    document.getElementById("adminForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const nama = document.getElementById("namaProduk").value;
+      const deskripsi = document.getElementById("deskripsiProduk").value;
+      const gambar = document.getElementById("urlGambar").value;
+      alert("Produk berhasil disimpan:\nNama: " + nama + "\nDeskripsi: " + deskripsi + "\nGambar: " + gambar);
+    });
+
+    // Tombol Beli Sekarang
+    const buyButtons = document.querySelectorAll(".buyBtn");
+    buyButtons.forEach(btn => {
+      btn.addEventListener("click", function(e){
+        e.preventDefault();
+        alert("Pesanan Anda sedang diproses. Silakan cek status pesanan di panel.");
+      });
+    });
+  </script>
+</body>
+</html>
