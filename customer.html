@@ -340,6 +340,34 @@
             margin-top: 2px;
         }
 
+        .btn-pay {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 6px;
+        }
+
+        .btn-pay:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-pay:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-pay:disabled:hover {
+            box-shadow: none;
+            transform: none;
+        }
+
         .empty-msg {
             color: #999;
             text-align: center;
@@ -361,6 +389,7 @@
             transform: translateY(30px);
             transition: all 0.4s ease;
             z-index: 999;
+            max-width: 400px;
         }
 
         .toast.show {
@@ -376,6 +405,123 @@
             border-left: 6px solid #e74c3c;
         }
 
+        /* Modal Pembayaran */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .modal-content .modal-title i {
+            color: #27ae60;
+            margin-right: 10px;
+        }
+
+        .modal-content .payment-detail {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .modal-content .payment-detail .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-content .payment-detail .row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-content .payment-detail .label {
+            color: #666;
+        }
+
+        .modal-content .payment-detail .value {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-confirm-pay {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-confirm-pay:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-cancel-modal {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-cancel-modal:hover {
+            background: #c0392b;
+            transform: scale(1.02);
+        }
+
         @media (max-width: 1024px) {
             .grid-2col {
                 grid-template-columns: 1fr;
@@ -389,6 +535,9 @@
             .header {
                 flex-direction: column;
                 text-align: center;
+            }
+            .modal-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -419,7 +568,6 @@
                     <div class="card-title"><i class="fas fa-shopping-cart"></i> Keranjang Belanja</div>
                     <div id="cartItems"></div>
 
-                    <!-- METODE PEMBAYARAN LENGKAP -->
                     <div class="payment-method">
                         <label><i class="fas fa-credit-card"></i> Pilih Metode Pembayaran</label>
                         <select id="paymentMethod">
@@ -433,8 +581,6 @@
                                 <option value="Transfer Bank (Danamon)">Danamon</option>
                                 <option value="Transfer Bank (Permata)">Permata</option>
                                 <option value="Transfer Bank (Maybank)">Maybank</option>
-                                <option value="Transfer Bank (OCBC NISP)">OCBC NISP</option>
-                                <option value="Transfer Bank (HSBC)">HSBC</option>
                             </optgroup>
                             <optgroup label="📱 E-Wallet">
                                 <option value="E-Wallet (GoPay)">GoPay</option>
@@ -442,27 +588,16 @@
                                 <option value="E-Wallet (DANA)">DANA</option>
                                 <option value="E-Wallet (LinkAja)">LinkAja</option>
                                 <option value="E-Wallet (ShopeePay)">ShopeePay</option>
-                                <option value="E-Wallet (Sakuku)">Sakuku (BCA)</option>
-                                <option value="E-Wallet (QRIS)">QRIS (Semua Aplikasi)</option>
+                                <option value="E-Wallet (QRIS)">QRIS</option>
                             </optgroup>
-                            <optgroup label="💳 Kartu Kredit/Debit">
+                            <optgroup label="💳 Kartu">
                                 <option value="Kartu Kredit (Visa)">Visa</option>
                                 <option value="Kartu Kredit (Mastercard)">Mastercard</option>
-                                <option value="Kartu Kredit (JCB)">JCB</option>
-                                <option value="Kartu Kredit (American Express)">American Express</option>
-                                <option value="Kartu Debit (Semua Bank)">Kartu Debit (Semua Bank)</option>
-                            </optgroup>
-                            <optgroup label="🏪 Minimart">
-                                <option value="Minimart (Indomaret)">Indomaret</option>
-                                <option value="Minimart (Alfamart)">Alfamart</option>
-                                <option value="Minimart (Lawson)">Lawson</option>
-                                <option value="Minimart (Circle K)">Circle K</option>
+                                <option value="Kartu Debit">Kartu Debit</option>
                             </optgroup>
                             <optgroup label="📦 Lainnya">
                                 <option value="COD (Bayar di Tempat)">COD (Bayar di Tempat)</option>
-                                <option value="PayLater (Bayar Nanti)">PayLater (Bayar Nanti)</option>
-                                <option value="Cicilan (0% Bunga)">Cicilan 0% Bunga</option>
-                                <option value="Kripto (BTC/ETH)">Kripto (BTC/ETH)</option>
+                                <option value="PayLater">PayLater</option>
                             </optgroup>
                         </select>
                     </div>
@@ -482,6 +617,51 @@
         </div>
     </div>
 
+    <!-- MODAL PEMBAYARAN -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <i class="fas fa-credit-card"></i> Konfirmasi Pembayaran
+            </div>
+            <p style="color:#555; margin-bottom:15px;">Silakan konfirmasi pembayaran untuk pesanan berikut:</p>
+            
+            <div class="payment-detail" id="paymentDetail">
+                <div class="row">
+                    <span class="label">ID Pesanan</span>
+                    <span class="value" id="modalOrderId">#12345</span>
+                </div>
+                <div class="row">
+                    <span class="label">Produk</span>
+                    <span class="value" id="modalProducts">-</span>
+                </div>
+                <div class="row">
+                    <span class="label">Total</span>
+                    <span class="value" id="modalTotal">Rp 0</span>
+                </div>
+                <div class="row">
+                    <span class="label">Metode Pembayaran</span>
+                    <span class="value" id="modalPaymentMethod">-</span>
+                </div>
+            </div>
+
+            <div style="background:#fef9e7; padding:15px; border-radius:12px; margin:15px 0;">
+                <p style="font-size:0.9rem; color:#7f6000;">
+                    <i class="fas fa-info-circle"></i> 
+                    Dengan mengklik "Konfirmasi Bayar", pesanan Anda akan segera diproses.
+                </p>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel-modal" onclick="closePaymentModal()">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button class="btn-confirm-pay" id="confirmPayBtn">
+                    <i class="fas fa-check"></i> Konfirmasi Bayar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -491,6 +671,7 @@
         let products = [];
         let cart = [];
         let orders = [];
+        let pendingOrderId = null;
 
         function loadData() {
             try {
@@ -529,7 +710,7 @@
             t.textContent = msg;
             t.className = 'toast ' + type + ' show';
             clearTimeout(t._timer);
-            t._timer = setTimeout(() => { t.classList.remove('show'); }, 3000);
+            t._timer = setTimeout(() => { t.classList.remove('show'); }, 4000);
         }
 
         // ================================================================
@@ -631,7 +812,7 @@
         }
 
         // ================================================================
-        // CHECKOUT DENGAN METODE PEMBAYARAN LENGKAP
+        // CHECKOUT
         // ================================================================
         function checkout() {
             if (cart.length === 0) {
@@ -666,13 +847,62 @@
             saveData();
             renderAll();
             showToast(
-                `✅ Checkout berhasil!\nTotal: ${formatRupiah(total)}\nMetode: ${paymentMethod}`,
+                `✅ Checkout berhasil! Silakan bayar pesanan #${newOrder.id}`,
                 'success'
             );
         }
 
         // ================================================================
-        // RENDER ORDERS
+        // PAYMENT MODAL
+        // ================================================================
+        function openPaymentModal(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            pendingOrderId = orderId;
+
+            document.getElementById('modalOrderId').textContent = '#' + order.id;
+            const productNames = order.items ? order.items.map(i => i.productName).join(', ') : 'Produk';
+            document.getElementById('modalProducts').textContent = productNames;
+            document.getElementById('modalTotal').textContent = formatRupiah(order.total);
+            document.getElementById('modalPaymentMethod').textContent = order.paymentMethod || 'Transfer Bank';
+
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            pendingOrderId = null;
+        }
+
+        // Konfirmasi Pembayaran
+        document.getElementById('confirmPayBtn').addEventListener('click', function() {
+            if (!pendingOrderId) return;
+
+            const order = orders.find(o => o.id === pendingOrderId);
+            if (!order) return;
+
+            // Ubah status menjadi "process" (diproses)
+            order.status = 'process';
+            saveData();
+            renderAll();
+            closePaymentModal();
+
+            showToast(
+                `✅ Pembayaran pesanan #${order.id} berhasil! Pesanan sedang diproses.`,
+                'success'
+            );
+        });
+
+        // Tutup modal jika klik di luar
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        // ================================================================
+        // RENDER ORDERS (Dengan Tombol Bayar)
         // ================================================================
         function renderOrders() {
             const container = document.getElementById('orderList');
@@ -693,6 +923,8 @@
             container.innerHTML = sorted.map(o => {
                 const st = statusMap[o.status] || statusMap.unpaid;
                 const productNames = o.items ? o.items.map(i => i.productName).join(', ') : 'Produk';
+                const isUnpaid = o.status === 'unpaid';
+
                 return `
                         <div class="order-item">
                             <div class="order-header">
@@ -708,9 +940,22 @@
                             <div style="font-size:0.75rem; color:#888; margin-top:2px;">
                                 ${o.date || ''}
                             </div>
+                            ${isUnpaid ? `
+                                <button class="btn-pay" data-order-id="${o.id}">
+                                    <i class="fas fa-money-bill-wave"></i> Bayar Sekarang
+                                </button>
+                            ` : ''}
                         </div>
                     `;
             }).join('');
+
+            // Event tombol bayar
+            container.querySelectorAll('.btn-pay').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.orderId);
+                    openPaymentModal(id);
+                });
+            });
         }
 
         // ================================================================
