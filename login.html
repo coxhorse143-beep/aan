@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - GadgetStore</title>
+    <title>Login & Register - GadgetStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         * {
@@ -26,8 +26,8 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 30px;
-            padding: 50px 40px;
-            max-width: 450px;
+            padding: 40px 35px;
+            max-width: 500px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.6s ease;
@@ -44,62 +44,85 @@
             }
         }
 
-        .login-container h1 {
+        .login-container .logo {
             text-align: center;
-            color: #1a1a2e;
-            font-size: 2.2rem;
-            margin-bottom: 8px;
+            margin-bottom: 25px;
         }
 
-        .login-container h1 i {
+        .login-container .logo h1 {
+            color: #1a1a2e;
+            font-size: 2.2rem;
+        }
+
+        .login-container .logo h1 i {
             color: #f1c40f;
             margin-right: 10px;
         }
 
-        .login-container .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+        .login-container .logo p {
+            color: #888;
             font-size: 0.95rem;
+            margin-top: 4px;
         }
 
-        .role-selector {
+        .auth-tabs {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 25px;
-        }
-
-        .role-selector button {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #ddd;
+            background: #f0f2f5;
             border-radius: 14px;
-            background: #f8f9fa;
+            padding: 5px;
+        }
+
+        .auth-tabs button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            font-weight: 700;
+            font-size: 0.95rem;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
             transition: all 0.3s ease;
-            color: #555;
+            color: #666;
         }
 
-        .role-selector button i {
-            margin-right: 8px;
-        }
-
-        .role-selector button.active {
-            border-color: #0f3460;
+        .auth-tabs button.active {
             background: #0f3460;
             color: white;
             box-shadow: 0 4px 15px rgba(15, 52, 96, 0.3);
         }
 
-        .role-selector button:hover:not(.active) {
-            background: #e9ecef;
-            transform: scale(1.02);
+        .auth-tabs button:hover:not(.active) {
+            background: #e0e4ea;
+        }
+
+        .auth-tabs button i {
+            margin-right: 8px;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
@@ -107,25 +130,39 @@
             font-weight: 600;
             color: #1a1a2e;
             margin-bottom: 6px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        .form-group input {
+        .form-group label i {
+            margin-right: 6px;
+            color: #0f3460;
+        }
+
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 14px 18px;
             border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background: white;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #0f3460;
             outline: none;
             box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
         }
 
-        .btn-login {
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-submit {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #0f3460, #1a1a2e);
@@ -136,27 +173,111 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 6px;
         }
 
-        .btn-login:hover {
+        .btn-submit:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(15, 52, 96, 0.4);
         }
 
-        .btn-login:active {
+        .btn-submit:active {
             transform: scale(0.98);
+        }
+
+        .btn-submit i {
+            margin-right: 8px;
         }
 
         .info-text {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 18px;
             font-size: 0.85rem;
             color: #888;
         }
 
-        .info-text strong {
+        .info-text a {
             color: #0f3460;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== CAPTCHA ===== */
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+
+        .captcha-container .captcha-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #0f3460;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: 2px dashed #0f3460;
+            user-select: none;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .captcha-container .captcha-refresh {
+            background: #0f3460;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .captcha-container .captcha-refresh:hover {
+            transform: rotate(180deg);
+            background: #1a1a2e;
+        }
+
+        .captcha-container input {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .captcha-container input:focus {
+            border-color: #0f3460;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
+        }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .password-requirements .valid {
+            color: #2ecc71;
+        }
+
+        .password-requirements .invalid {
+            color: #e74c3c;
         }
 
         .toast {
@@ -173,6 +294,7 @@
             transform: translateY(30px);
             transition: all 0.4s ease;
             z-index: 999;
+            max-width: 400px;
         }
 
         .toast.show {
@@ -187,97 +309,383 @@
         .toast.success {
             border-left: 6px solid #2ecc71;
         }
+
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 25px 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .auth-tabs button {
+                font-size: 0.8rem;
+                padding: 10px 8px;
+            }
+            .captcha-container {
+                flex-direction: column;
+            }
+            .captcha-container .captcha-text {
+                font-size: 1.4rem;
+                letter-spacing: 4px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1><i class="fas fa-store"></i> GadgetStore</h1>
-        <p class="subtitle">Silakan login untuk melanjutkan</p>
+        <div class="logo">
+            <h1><i class="fas fa-store"></i> GadgetStore</h1>
+            <p>Login atau Daftar untuk melanjutkan</p>
+        </div>
 
-        <div class="role-selector">
-            <button id="btnAdmin" class="active">
-                <i class="fas fa-user-cog"></i> Admin
+        <!-- Tabs -->
+        <div class="auth-tabs">
+            <button class="active" id="tabLogin">
+                <i class="fas fa-sign-in-alt"></i> Login
             </button>
-            <button id="btnCustomer">
-                <i class="fas fa-user"></i> Customer
+            <button id="tabRegister">
+                <i class="fas fa-user-plus"></i> Daftar
             </button>
         </div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label><i class="fas fa-envelope"></i> Username / Email</label>
-                <input type="text" id="username" placeholder="Masukkan username" required />
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-lock"></i> Password</label>
-                <input type="password" id="password" placeholder="Masukkan password" required />
-            </div>
-            <button type="submit" class="btn-login">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-        </form>
+        <!-- FORM LOGIN -->
+        <div class="auth-form active" id="formLogin">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Username / Email</label>
+                    <input type="text" id="loginUsername" placeholder="Masukkan username" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Masukkan password" required />
+                </div>
 
-        <div class="info-text">
-            <p><strong>Admin:</strong> admin / admin123</p>
-            <p><strong>Customer:</strong> customer / customer123</p>
+                <!-- CAPTCHA Login -->
+                <div class="form-group">
+                    <label><i class="fas fa-shield-alt"></i> Verifikasi Keamanan</label>
+                    <div class="captcha-container">
+                        <span class="captcha-text" id="loginCaptchaText">A7K9P</span>
+                        <button type="button" class="captcha-refresh" onclick="refreshCaptcha('loginCaptchaText')">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <input type="text" id="loginCaptchaInput" placeholder="Kode di atas" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div class="info-text">
+                <p>Belum punya akun? <a id="switchToRegister">Daftar sekarang</a></p>
+                <p style="margin-top:4px; font-size:0.75rem; color:#bbb;">
+                    <strong>Admin:</strong> admin / admin123 &nbsp;|&nbsp; <strong>Customer:</strong> customer / customer123
+                </p>
+            </div>
+        </div>
+
+        <!-- FORM REGISTER -->
+        <div class="auth-form" id="formRegister">
+            <form id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                        <input type="text" id="regFullName" placeholder="Contoh: Budi Santoso" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="regEmail" placeholder="email@example.com" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-user-tag"></i> Username</label>
+                    <input type="text" id="regUsername" placeholder="Pilih username unik" required />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Nomor Telepon</label>
+                    <input type="text" id="regPhone" placeholder="0812-3456-7890" />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Alamat</label>
+                    <input type="text" id="regAddress" placeholder="Jl. Contoh No. 123, Jakarta" />
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="regPassword" placeholder="Minimal 6 karakter" required />
+                    <div class="password-requirements" id="passwordReq">
+                        <span id="reqLength"><i class="fas fa-circle"></i> Minimal 6 karakter</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Konfirmasi Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Ketik ulang password" required />
+                </div>
+
+                <!-- CAPTCHA Register -->
+                <div class="form-group">
+                    <label><i class="fas fa-shield-alt"></i> Verifikasi Keamanan</label>
+                    <div class="captcha-container">
+                        <span class="captcha-text" id="registerCaptchaText">X3M8F</span>
+                        <button type="button" class="captcha-refresh" onclick="refreshCaptcha('registerCaptchaText')">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <input type="text" id="registerCaptchaInput" placeholder="Kode di atas" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-user-plus"></i> Daftar Sekarang
+                </button>
+            </form>
+            <div class="info-text">
+                <p>Sudah punya akun? <a id="switchToLogin">Login di sini</a></p>
+            </div>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-        let selectedRole = 'admin';
-
-        document.getElementById('btnAdmin').addEventListener('click', function() {
-            this.classList.add('active');
-            document.getElementById('btnCustomer').classList.remove('active');
-            selectedRole = 'admin';
-        });
-
-        document.getElementById('btnCustomer').addEventListener('click', function() {
-            this.classList.add('active');
-            document.getElementById('btnAdmin').classList.remove('active');
-            selectedRole = 'customer';
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            // Validasi sederhana
-            if (selectedRole === 'admin') {
-                if (username === 'admin' && password === 'admin123') {
-                    localStorage.setItem('gadgetstore_user', JSON.stringify({
-                        role: 'admin',
-                        username: username
-                    }));
-                    window.location.href = 'admin.html';
-                } else {
-                    showToast('❌ Username atau password Admin salah!', 'error');
-                }
-            } else {
-                if (username === 'customer' && password === 'customer123') {
-                    localStorage.setItem('gadgetstore_user', JSON.stringify({
-                        role: 'customer',
-                        username: username
-                    }));
-                    window.location.href = 'customer.html';
-                } else {
-                    showToast('❌ Username atau password Customer salah!', 'error');
-                }
+        // ================================================================
+        // CAPTCHA
+        // ================================================================
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
+            return result;
+        }
+
+        function refreshCaptcha(elementId) {
+            document.getElementById(elementId).textContent = generateCaptcha();
+        }
+
+        // Generate captcha awal
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginCaptchaText').textContent = generateCaptcha();
+            document.getElementById('registerCaptchaText').textContent = generateCaptcha();
         });
 
+        // ================================================================
+        // TOAST
+        // ================================================================
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.className = 'toast ' + type + ' show';
             clearTimeout(t._timer);
-            t._timer = setTimeout(() => { t.classList.remove('show'); }, 3000);
+            t._timer = setTimeout(() => { t.classList.remove('show'); }, 4000);
         }
 
-        // Jika sudah login, redirect ke halaman masing-masing
+        // ================================================================
+        // TAB SWITCH
+        // ================================================================
+        document.getElementById('tabLogin').addEventListener('click', function() {
+            document.querySelectorAll('.auth-tabs button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('formLogin').classList.add('active');
+            refreshCaptcha('loginCaptchaText');
+            document.getElementById('loginCaptchaInput').value = '';
+        });
+
+        document.getElementById('tabRegister').addEventListener('click', function() {
+            document.querySelectorAll('.auth-tabs button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('formRegister').classList.add('active');
+            refreshCaptcha('registerCaptchaText');
+            document.getElementById('registerCaptchaInput').value = '';
+        });
+
+        document.getElementById('switchToRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('tabRegister').click();
+        });
+
+        document.getElementById('switchToLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('tabLogin').click();
+        });
+
+        // ================================================================
+        // PASSWORD VALIDATION
+        // ================================================================
+        document.getElementById('regPassword').addEventListener('input', function() {
+            const val = this.value;
+            const reqLength = document.getElementById('reqLength');
+            const icon = reqLength.querySelector('i');
+
+            if (val.length >= 6) {
+                reqLength.className = 'valid';
+                icon.className = 'fas fa-check-circle';
+            } else {
+                reqLength.className = 'invalid';
+                icon.className = 'fas fa-times-circle';
+            }
+        });
+
+        // ================================================================
+        // REGISTER
+        // ================================================================
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const captchaInput = document.getElementById('registerCaptchaInput').value.trim().toUpperCase();
+            const captchaText = document.getElementById('registerCaptchaText').textContent;
+
+            // Validasi CAPTCHA
+            if (captchaInput !== captchaText) {
+                showToast('❌ Kode CAPTCHA salah!', 'error');
+                refreshCaptcha('registerCaptchaText');
+                document.getElementById('registerCaptchaInput').value = '';
+                return;
+            }
+
+            if (!fullName || !email || !username || !password) {
+                showToast('Harap isi semua field wajib!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showToast('Password tidak cocok!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('gadgetstore_users') || '[]');
+            if (users.find(u => u.username === username)) {
+                showToast('Username sudah digunakan!', 'error');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showToast('Email sudah terdaftar!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                fullName: fullName,
+                email: email,
+                username: username,
+                phone: phone || '-',
+                address: address || '-',
+                password: password,
+                role: 'customer',
+                createdAt: new Date().toLocaleString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('gadgetstore_users', JSON.stringify(users));
+
+            showToast('✅ Pendaftaran berhasil! Silakan login.', 'success');
+
+            document.getElementById('registerForm').reset();
+            document.getElementById('tabLogin').click();
+            document.getElementById('loginUsername').value = username;
+            refreshCaptcha('loginCaptchaText');
+        });
+
+        // ================================================================
+        // LOGIN
+        // ================================================================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const captchaInput = document.getElementById('loginCaptchaInput').value.trim().toUpperCase();
+            const captchaText = document.getElementById('loginCaptchaText').textContent;
+
+            // Validasi CAPTCHA
+            if (captchaInput !== captchaText) {
+                showToast('❌ Kode CAPTCHA salah!', 'error');
+                refreshCaptcha('loginCaptchaText');
+                document.getElementById('loginCaptchaInput').value = '';
+                return;
+            }
+
+            if (!username || !password) {
+                showToast('Harap isi username dan password!', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('gadgetstore_users') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                localStorage.setItem('gadgetstore_user', JSON.stringify({
+                    id: user.id,
+                    username: user.username,
+                    fullName: user.fullName,
+                    role: user.role,
+                    email: user.email,
+                    phone: user.phone,
+                    address: user.address
+                }));
+
+                showToast('✅ Login berhasil! Selamat datang ' + user.fullName, 'success');
+
+                setTimeout(() => {
+                    if (user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'customer.html';
+                    }
+                }, 500);
+                return;
+            }
+
+            // Default admin/customer
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('gadgetstore_user', JSON.stringify({
+                    username: 'admin',
+                    fullName: 'Administrator',
+                    role: 'admin',
+                    email: 'admin@gadgetstore.com',
+                    phone: '-',
+                    address: '-'
+                }));
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            if (username === 'customer' && password === 'customer123') {
+                localStorage.setItem('gadgetstore_user', JSON.stringify({
+                    username: 'customer',
+                    fullName: 'Customer',
+                    role: 'customer',
+                    email: 'customer@example.com',
+                    phone: '-',
+                    address: '-'
+                }));
+                window.location.href = 'customer.html';
+                return;
+            }
+
+            showToast('❌ Username atau password salah!', 'error');
+            refreshCaptcha('loginCaptchaText');
+            document.getElementById('loginCaptchaInput').value = '';
+        });
+
+        // ================================================================
+        // AUTO REDIRECT
+        // ================================================================
         window.addEventListener('load', function() {
             const userData = localStorage.getItem('gadgetstore_user');
             if (userData) {
