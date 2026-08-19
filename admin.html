@@ -538,6 +538,24 @@
             margin-right: 8px;
         }
 
+        .info-box.warning {
+            background: #fef9e7;
+            border-left-color: #f1c40f;
+        }
+
+        .info-box.warning i {
+            color: #f1c40f;
+        }
+
+        .info-box.danger {
+            background: #fdedec;
+            border-left-color: #e74c3c;
+        }
+
+        .info-box.danger i {
+            color: #e74c3c;
+        }
+
         @media (max-width: 1024px) {
             .stats-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -842,7 +860,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- TAB 5: KELOLA ADMIN -->
+        <!-- TAB 5: KELOLA ADMIN (HANYA SUPER ADMIN) -->
         <!-- ============================================================ -->
         <div class="tab-content" id="tab-admins">
             <div class="card">
@@ -850,11 +868,19 @@
                     <i class="fas fa-user-plus"></i> Tambah Admin Baru
                 </div>
 
-                <div class="info-box">
-                    <i class="fas fa-info-circle"></i>
-                    <span id="adminRoleInfo">Anda adalah <strong>Super Admin</strong>. Anda dapat menambahkan Super Admin atau Admin biasa.</span>
+                <!-- Info Box berdasarkan role -->
+                <div id="adminInfoBox">
+                    <div class="info-box" id="superAdminInfo">
+                        <i class="fas fa-crown"></i>
+                        Anda adalah <strong>Super Admin</strong>. Anda dapat menambahkan Admin baru.
+                    </div>
+                    <div class="info-box warning" id="regularAdminInfo" style="display:none;">
+                        <i class="fas fa-lock"></i>
+                        Anda adalah <strong>Admin Biasa</strong>. <span style="color:#e74c3c;font-weight:700;">HANYA Super Admin</span> yang dapat menambahkan admin baru.
+                    </div>
                 </div>
 
+                <!-- Form Tambah Admin - HANYA untuk Super Admin -->
                 <form class="admin-form" id="adminForm">
                     <div class="form-row">
                         <div>
@@ -877,20 +903,20 @@
                         </div>
                     </div>
 
-                    <!-- Pilihan Role -->
-                    <div class="form-row">
+                    <!-- Pilihan Role - HANYA untuk Super Admin -->
+                    <div class="form-row" id="roleSelectContainer">
                         <div>
                             <label><i class="fas fa-user-shield"></i> Role Admin</label>
                             <select id="adminRoleSelect">
                                 <option value="admin">Admin Biasa</option>
-                                <option value="superadmin" id="superAdminOption">Super Admin</option>
+                                <option value="superadmin">Super Admin</option>
                             </select>
                         </div>
                         <div>
                             <label>&nbsp;</label>
                             <div style="padding:8px 0; font-size:0.85rem; color:#666;">
                                 <i class="fas fa-info-circle"></i>
-                                <span id="roleDesc">Admin biasa hanya bisa mengelola toko. Super Admin bisa menambah admin lain.</span>
+                                <span id="roleDesc">Super Admin bisa menambah admin lain. Admin biasa hanya kelola toko.</span>
                             </div>
                         </div>
                     </div>
@@ -901,8 +927,17 @@
                         </button>
                     </div>
                 </form>
+
+                <!-- Pesan untuk Admin Biasa -->
+                <div id="regularAdminMessage" style="display:none; padding:20px; background:#fef9e7; border-radius:12px; text-align:center; border:2px dashed #f1c40f;">
+                    <i class="fas fa-lock" style="font-size:3rem; color:#f1c40f; margin-bottom:10px; display:block;"></i>
+                    <h3 style="color:#1a1a2e;">Akses Dibatasi</h3>
+                    <p style="color:#666; margin-top:8px;">Hanya <strong>Super Admin</strong> yang memiliki izin untuk menambahkan admin baru.</p>
+                    <p style="color:#888; font-size:0.85rem; margin-top:4px;">Hubungi Super Admin jika Anda memerlukan akses ini.</p>
+                </div>
             </div>
 
+            <!-- Daftar Admin - Bisa dilihat semua admin -->
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-users"></i> Daftar Admin
@@ -1569,7 +1604,7 @@
         }
 
         // ================================================================
-        // KELOLA ADMIN (DENGAN SUPER ADMIN)
+        // KELOLA ADMIN (HANYA SUPER ADMIN BISA TAMBAH)
         // ================================================================
 
         function renderAdmins() {
@@ -1583,7 +1618,6 @@
                 return;
             }
 
-            // Cek apakah current user adalah super admin
             const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
 
             tbody.innerHTML = adminUsers.map((u, index) => {
@@ -1599,18 +1633,17 @@
 
                 let actions = '';
                 if (u.id !== 1) {
-                    // Bisa hapus jika bukan owner
-                    actions = `
-                        <button class="btn-danger" data-id="${u.id}" onclick="deleteAdmin(${u.id})">
-                            <i class="fas fa-trash"></i> Hapus
-                        </button>
-                    `;
+                    // Hanya Super Admin yang bisa hapus admin
+                    if (isSuperAdmin) {
+                        actions = `
+                            <button class="btn-danger" data-id="${u.id}" onclick="deleteAdmin(${u.id})">
+                                <i class="fas fa-trash"></i> Hapus
+                            </button>
+                        `;
+                    } else {
+                        actions = '<span style="font-size:0.8rem;color:#888;">Tidak bisa hapus</span>';
+                    }
                 } else {
-                    actions = '<span style="font-size:0.8rem;color:#888;">Tidak bisa dihapus</span>';
-                }
-
-                // Jika current user bukan super admin, dia hanya bisa hapus admin biasa, bukan super admin
-                if (!isSuperAdmin && u.isSuperAdmin && u.id !== 1) {
                     actions = '<span style="font-size:0.8rem;color:#888;">Tidak bisa dihapus</span>';
                 }
 
@@ -1631,9 +1664,19 @@
             }).join('');
         }
 
-        // Tambah Admin
+        // ================================================================
+        // TAMBAH ADMIN - HANYA SUPER ADMIN
+        // ================================================================
+
         document.getElementById('adminForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            // CEK: HANYA Super Admin yang bisa menambah admin
+            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
+            if (!isSuperAdmin) {
+                showToast('❌ HANYA Super Admin yang dapat menambahkan admin baru!', 'error');
+                return;
+            }
 
             const fullName = document.getElementById('adminFullName').value.trim();
             const email = document.getElementById('adminEmailInput').value.trim();
@@ -1661,13 +1704,6 @@
                 return;
             }
 
-            // Cek apakah user bisa menambah super admin
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            if (role === 'superadmin' && !isSuperAdmin) {
-                showToast('❌ Hanya Super Admin yang bisa menambah Super Admin!', 'error');
-                return;
-            }
-
             const isSuperAdminValue = role === 'superadmin';
 
             const newAdmin = {
@@ -1692,23 +1728,24 @@
             showToast(`✅ ${roleText} "${fullName}" berhasil ditambahkan!`, 'success');
         });
 
-        // Hapus Admin
+        // ================================================================
+        // HAPUS ADMIN - HANYA SUPER ADMIN
+        // ================================================================
+
         function deleteAdmin(id) {
             const admin = users.find(u => u.id === id);
             if (!admin) return;
 
-            // Owner (id=1) tidak bisa dihapus
-            if (admin.id === 1) {
-                showToast('❌ Owner tidak bisa dihapus!', 'error');
+            // Cek apakah current user adalah super admin
+            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
+            if (!isSuperAdmin) {
+                showToast('❌ HANYA Super Admin yang dapat menghapus admin!', 'error');
                 return;
             }
 
-            // Cek apakah current user adalah super admin
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-
-            // Jika admin yang akan dihapus adalah super admin dan current user bukan super admin
-            if (admin.isSuperAdmin && !isSuperAdmin) {
-                showToast('❌ Hanya Super Admin yang bisa menghapus Super Admin!', 'error');
+            // Owner (id=1) tidak bisa dihapus
+            if (admin.id === 1) {
+                showToast('❌ Owner tidak bisa dihapus!', 'error');
                 return;
             }
 
@@ -1720,24 +1757,33 @@
             showToast(`🗑️ Admin "${admin.fullName}" berhasil dihapus!`, 'error');
         }
 
-        // Update role select berdasarkan user
-        function updateRoleSelect() {
+        // ================================================================
+        // UPDATE UI BERDASARKAN ROLE
+        // ================================================================
+
+        function updateAdminUI() {
             const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            const select = document.getElementById('adminRoleSelect');
-            const superAdminOption = document.getElementById('superAdminOption');
-            const roleInfo = document.getElementById('adminRoleInfo');
-            const roleDesc = document.getElementById('roleDesc');
+
+            const superAdminInfo = document.getElementById('superAdminInfo');
+            const regularAdminInfo = document.getElementById('regularAdminInfo');
+            const adminForm = document.getElementById('adminForm');
+            const regularMessage = document.getElementById('regularAdminMessage');
+            const roleSelectContainer = document.getElementById('roleSelectContainer');
 
             if (isSuperAdmin) {
-                superAdminOption.style.display = 'block';
-                roleInfo.innerHTML = 'Anda adalah <strong>Super Admin</strong>. Anda dapat menambahkan Super Admin atau Admin biasa.';
-                roleDesc.textContent = 'Super Admin bisa menambah admin lain dan mengelola semua fitur.';
-                select.value = 'admin';
+                // Super Admin: tampilkan form lengkap
+                superAdminInfo.style.display = 'block';
+                regularAdminInfo.style.display = 'none';
+                adminForm.style.display = 'block';
+                regularMessage.style.display = 'none';
+                roleSelectContainer.style.display = 'grid';
             } else {
-                superAdminOption.style.display = 'none';
-                roleInfo.innerHTML = 'Anda adalah <strong>Admin Biasa</strong>. Anda hanya dapat menambahkan Admin biasa.';
-                roleDesc.textContent = 'Admin biasa hanya bisa mengelola toko, tidak bisa menambah Super Admin.';
-                select.value = 'admin';
+                // Admin Biasa: sembunyikan form, tampilkan pesan
+                superAdminInfo.style.display = 'none';
+                regularAdminInfo.style.display = 'block';
+                adminForm.style.display = 'none';
+                regularMessage.style.display = 'block';
+                roleSelectContainer.style.display = 'none';
             }
         }
 
@@ -1751,7 +1797,7 @@
             renderPrices();
             renderPurchases();
             renderAdmins();
-            updateRoleSelect();
+            updateAdminUI();
         }
 
         // ================================================================
@@ -1786,7 +1832,7 @@
                     roleBadge.style.background = '#f1c40f';
                     roleBadge.style.color = '#1a1a2e';
                 } else {
-                    roleBadge.textContent = '👤 Admin';
+                    roleBadge.textContent = '👤 Admin Biasa';
                     roleBadge.style.background = '#0f3460';
                     roleBadge.style.color = 'white';
                 }
