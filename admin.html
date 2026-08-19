@@ -183,7 +183,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -358,6 +358,12 @@
             transform: scale(1.05);
         }
 
+        .btn-danger:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-edit {
             background: #3498db;
             color: white;
@@ -443,6 +449,24 @@
             color: white;
         }
 
+        .badge-admin {
+            background: #0f3460;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-super {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
         .empty-msg {
             color: #999;
             text-align: center;
@@ -482,7 +506,7 @@
 
         @media (max-width: 1024px) {
             .stats-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(3, 1fr);
             }
             .form-row {
                 grid-template-columns: 1fr;
@@ -493,6 +517,12 @@
             .nav-tabs button {
                 padding: 10px 16px;
                 font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -558,6 +588,11 @@
                 <h3>Pendapatan</h3>
                 <p id="financialReport">Rp 0</p>
             </div>
+            <div class="stat-item">
+                <i class="fas fa-users-cog"></i>
+                <h3>Total Admin</h3>
+                <p id="totalAdmins">0</p>
+            </div>
         </div>
 
         <!-- ===== NAV TABS ===== -->
@@ -573,6 +608,9 @@
             </button>
             <button data-tab="tab-purchases">
                 <i class="fas fa-shopping-cart"></i> Pembelian
+            </button>
+            <button data-tab="tab-admins">
+                <i class="fas fa-users-cog"></i> Kelola Admin
             </button>
         </div>
 
@@ -658,7 +696,6 @@
         <!-- TAB 2: SUPPLIER -->
         <!-- ============================================================ -->
         <div class="tab-content" id="tab-suppliers">
-            <!-- Form Supplier -->
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-plus-circle"></i> Tambah Supplier
@@ -694,7 +731,6 @@
                 </form>
             </div>
 
-            <!-- Daftar Supplier -->
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-list"></i> Daftar Supplier
@@ -772,6 +808,68 @@
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- TAB 5: KELOLA ADMIN -->
+        <!-- ============================================================ -->
+        <div class="tab-content" id="tab-admins">
+            <!-- Form Tambah Admin -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-user-plus"></i> Tambah Admin Baru
+                </div>
+                <form class="admin-form" id="adminForm">
+                    <div class="form-row">
+                        <div>
+                            <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                            <input type="text" id="adminFullName" placeholder="Contoh: Budi Santoso" required />
+                        </div>
+                        <div>
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="adminEmailInput" placeholder="admin@email.com" required />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <label><i class="fas fa-user-tag"></i> Username</label>
+                            <input type="text" id="adminUsername" placeholder="Pilih username" required />
+                        </div>
+                        <div>
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="adminPassword" placeholder="Minimal 6 karakter" required />
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save" id="adminSubmitBtn">
+                            <i class="fas fa-save"></i> Tambah Admin
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Daftar Admin -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-users"></i> Daftar Admin
+                    <span class="badge" id="adminCount">0 admin</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -784,19 +882,24 @@
         let products = [];
         let suppliers = [];
         let orders = [];
+        let users = [];
+        let currentUser = null;
 
         function loadData() {
             try {
                 const p = localStorage.getItem('gadgetstore_products');
                 const s = localStorage.getItem('gadgetstore_suppliers');
                 const o = localStorage.getItem('gadgetstore_orders');
+                const u = localStorage.getItem('gadgetstore_users');
                 products = p ? JSON.parse(p) : [];
                 suppliers = s ? JSON.parse(s) : [];
                 orders = o ? JSON.parse(o) : [];
+                users = u ? JSON.parse(u) : [];
             } catch (e) {
                 products = [];
                 suppliers = [];
                 orders = [];
+                users = [];
             }
 
             // Data demo jika kosong
@@ -858,12 +961,49 @@
                 }];
                 saveData();
             }
+
+            // Pastikan admin default ada di users
+            const adminExists = users.find(u => u.username === 'admin' && u.role === 'admin');
+            if (!adminExists) {
+                users.push({
+                    id: 1,
+                    fullName: 'Administrator',
+                    email: 'admin@gadgetstore.com',
+                    username: 'admin',
+                    phone: '-',
+                    address: '-',
+                    password: 'admin123',
+                    role: 'admin',
+                    isSuperAdmin: true,
+                    createdAt: new Date().toLocaleString()
+                });
+                saveData();
+            }
+
+            // Pastikan customer default ada
+            const customerExists = users.find(u => u.username === 'customer' && u.role === 'customer');
+            if (!customerExists) {
+                users.push({
+                    id: 2,
+                    fullName: 'Customer',
+                    email: 'customer@example.com',
+                    username: 'customer',
+                    phone: '-',
+                    address: '-',
+                    password: 'customer123',
+                    role: 'customer',
+                    isSuperAdmin: false,
+                    createdAt: new Date().toLocaleString()
+                });
+                saveData();
+            }
         }
 
         function saveData() {
             localStorage.setItem('gadgetstore_products', JSON.stringify(products));
             localStorage.setItem('gadgetstore_suppliers', JSON.stringify(suppliers));
             localStorage.setItem('gadgetstore_orders', JSON.stringify(orders));
+            localStorage.setItem('gadgetstore_users', JSON.stringify(users));
         }
 
         // ================================================================
@@ -909,6 +1049,9 @@
 
             const revenue = orders.filter(o => o.status === 'done').reduce((sum, o) => sum + o.total, 0);
             document.getElementById('financialReport').textContent = formatRupiah(revenue);
+
+            const adminCount = users.filter(u => u.role === 'admin').length;
+            document.getElementById('totalAdmins').textContent = adminCount;
         }
 
         // ================================================================
@@ -945,7 +1088,6 @@
                     </tr>
                 `).join('');
 
-            // Event Edit
             tbody.querySelectorAll('.btn-edit').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
@@ -953,7 +1095,6 @@
                 });
             });
 
-            // Event Hapus
             tbody.querySelectorAll('.btn-danger').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
@@ -1077,7 +1218,6 @@
             }
 
             if (editId) {
-                // EDIT
                 const product = products.find(p => p.id === parseInt(editId));
                 if (!product) return;
 
@@ -1125,7 +1265,6 @@
                 checkDone();
 
             } else {
-                // TAMBAH
                 if (!imageFile) {
                     showToast('Harap upload gambar produk!', 'error');
                     return;
@@ -1252,7 +1391,6 @@
             document.getElementById('cancelEditSupplierBtn').style.display = 'none';
         }
 
-        // Submit Supplier
         document.getElementById('supplierForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1365,7 +1503,6 @@
                     `;
             }).join('');
 
-            // Event update status
             tbody.querySelectorAll('.order-status-select').forEach(sel => {
                 sel.addEventListener('change', function() {
                     const id = parseInt(this.dataset.orderId);
@@ -1382,6 +1519,111 @@
         }
 
         // ================================================================
+        // KELOLA ADMIN
+        // ================================================================
+
+        function renderAdmins() {
+            const tbody = document.getElementById('adminList');
+            const count = document.getElementById('adminCount');
+            const adminUsers = users.filter(u => u.role === 'admin');
+            count.textContent = adminUsers.length + ' admin';
+
+            if (adminUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Belum ada admin.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = adminUsers.map((u, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${u.fullName}</strong></td>
+                        <td>${u.email}</td>
+                        <td>${u.username}</td>
+                        <td>
+                            ${u.isSuperAdmin ? '<span class="badge-super">Super Admin</span>' : '<span class="badge-admin">Admin</span>'}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                ${!u.isSuperAdmin ? `
+                                    <button class="btn-danger" data-id="${u.id}" onclick="deleteAdmin(${u.id})">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                ` : `
+                                    <span style="font-size:0.8rem;color:#888;">Tidak bisa dihapus</span>
+                                `}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        // Tambah Admin
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('adminFullName').value.trim();
+            const email = document.getElementById('adminEmailInput').value.trim();
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+
+            if (!fullName || !email || !username || !password) {
+                showToast('Harap isi semua field!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            // Cek username sudah ada
+            if (users.find(u => u.username === username)) {
+                showToast('Username sudah digunakan!', 'error');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showToast('Email sudah terdaftar!', 'error');
+                return;
+            }
+
+            const newAdmin = {
+                id: generateId(),
+                fullName: fullName,
+                email: email,
+                username: username,
+                phone: '-',
+                address: '-',
+                password: password,
+                role: 'admin',
+                isSuperAdmin: false,
+                createdAt: new Date().toLocaleString()
+            };
+
+            users.push(newAdmin);
+            saveData();
+            renderAll();
+            document.getElementById('adminForm').reset();
+            showToast(`✅ Admin "${fullName}" berhasil ditambahkan!`, 'success');
+        });
+
+        // Hapus Admin
+        function deleteAdmin(id) {
+            if (!confirm('Yakin ingin menghapus admin ini?')) return;
+
+            const admin = users.find(u => u.id === id);
+            if (admin && admin.isSuperAdmin) {
+                showToast('❌ Super Admin tidak bisa dihapus!', 'error');
+                return;
+            }
+
+            users = users.filter(u => u.id !== id);
+            saveData();
+            renderAll();
+            showToast('🗑️ Admin berhasil dihapus!', 'error');
+        }
+
+        // ================================================================
         // RENDER ALL
         // ================================================================
         function renderAll() {
@@ -1390,6 +1632,7 @@
             renderSuppliers();
             renderPrices();
             renderPurchases();
+            renderAdmins();
         }
 
         // ================================================================
@@ -1410,13 +1653,13 @@
                 return;
             }
             try {
-                const user = JSON.parse(userData);
-                if (user.role !== 'admin') {
+                currentUser = JSON.parse(userData);
+                if (currentUser.role !== 'admin') {
                     window.location.href = 'customer.html';
                     return;
                 }
-                document.getElementById('adminName').textContent = user.fullName || user.username || 'Admin';
-                document.getElementById('adminEmail').textContent = user.email || 'admin@gadgetstore.com';
+                document.getElementById('adminName').textContent = currentUser.fullName || currentUser.username || 'Admin';
+                document.getElementById('adminEmail').textContent = currentUser.email || 'admin@gadgetstore.com';
             } catch (e) {
                 window.location.href = 'login.html';
             }
