@@ -6,7 +6,6 @@
     <title>Admin - GadgetStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* ===== SAMA SEPERTI SEBELUMNYA ===== */
         * {
             margin: 0;
             padding: 0;
@@ -69,16 +68,6 @@
         .header .user-info .user-detail .email {
             font-size: 0.8rem;
             opacity: 0.7;
-        }
-
-        .header .user-info .user-detail .role-badge {
-            font-size: 0.7rem;
-            background: #f1c40f;
-            color: #1a1a2e;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-top: 2px;
         }
 
         .btn-logout {
@@ -478,15 +467,6 @@
             font-weight: 600;
         }
 
-        .badge-owner {
-            background: #f1c40f;
-            color: #1a1a2e;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
         .empty-msg {
             color: #999;
             text-align: center;
@@ -522,39 +502,6 @@
 
         .toast.error {
             border-left: 6px solid #e74c3c;
-        }
-
-        .info-box {
-            background: #e8f0fe;
-            border-left: 4px solid #0f3460;
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #1a1a2e;
-        }
-
-        .info-box i {
-            color: #0f3460;
-            margin-right: 8px;
-        }
-
-        .info-box.warning {
-            background: #fef9e7;
-            border-left-color: #f1c40f;
-        }
-
-        .info-box.warning i {
-            color: #f1c40f;
-        }
-
-        .info-box.danger {
-            background: #fdedec;
-            border-left-color: #e74c3c;
-        }
-
-        .info-box.danger i {
-            color: #e74c3c;
         }
 
         @media (max-width: 1024px) {
@@ -612,7 +559,6 @@
                 <div class="user-detail">
                     <span class="name" id="adminName">Admin</span>
                     <span class="email" id="adminEmail">admin@gadgetstore.com</span>
-                    <span class="role-badge" id="adminRoleBadge">Super Admin</span>
                 </div>
                 <button class="btn-logout" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -668,14 +614,18 @@
             </button>
         </div>
 
-        <!-- ===== TAB 1: PRODUK ===== -->
+        <!-- ============================================================ -->
+        <!-- TAB 1: PRODUK -->
+        <!-- ============================================================ -->
         <div class="tab-content active" id="tab-products">
+            <!-- Form Produk -->
             <div class="card">
                 <div class="card-title" id="formTitle">
                     <i class="fas fa-plus-circle"></i> Tambah Produk Baru
                 </div>
                 <form class="admin-form" id="productForm">
                     <input type="hidden" id="editId" value="" />
+
                     <div class="form-row">
                         <div>
                             <label><i class="fas fa-tag"></i> Nama Produk</label>
@@ -686,8 +636,10 @@
                             <input type="number" id="prodPrice" placeholder="12000000" required />
                         </div>
                     </div>
+
                     <label><i class="fas fa-align-left"></i> Deskripsi Produk</label>
                     <textarea id="prodDesc" placeholder="Deskripsi lengkap produk..." required></textarea>
+
                     <div class="form-row">
                         <div>
                             <label><i class="fas fa-image"></i> Upload Gambar</label>
@@ -704,6 +656,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn-save" id="submitBtn">
                             <i class="fas fa-save"></i> Simpan Produk
@@ -714,6 +667,8 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Daftar Produk -->
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-list"></i> Daftar Produk
@@ -737,12 +692,17 @@
             </div>
         </div>
 
-        <!-- ===== TAB 2: SUPPLIER ===== -->
+        <!-- ============================================================ -->
+        <!-- TAB 2: SUPPLIER -->
+        <!-- ============================================================ -->
         <div class="tab-content" id="tab-suppliers">
             <div class="card">
-                <div class="card-title"><i class="fas fa-plus-circle"></i> Tambah Supplier</div>
+                <div class="card-title">
+                    <i class="fas fa-plus-circle"></i> Tambah Supplier
+                </div>
                 <form class="admin-form" id="supplierForm">
                     <input type="hidden" id="editSupplierId" value="" />
+
                     <div class="form-row">
                         <div>
                             <label><i class="fas fa-building"></i> Nama Supplier</label>
@@ -753,10 +713,13 @@
                             <input type="text" id="supplierPhone" placeholder="0812-3456-7890" required />
                         </div>
                     </div>
+
                     <label><i class="fas fa-envelope"></i> Email</label>
                     <input type="email" id="supplierEmail" placeholder="supplier@email.com" required />
+
                     <label><i class="fas fa-map-marker-alt"></i> Alamat</label>
                     <textarea id="supplierAddress" placeholder="Alamat lengkap supplier..." required></textarea>
+
                     <div class="form-actions">
                         <button type="submit" class="btn-save" id="supplierSubmitBtn">
                             <i class="fas fa-save"></i> Simpan Supplier
@@ -767,6 +730,7 @@
                     </div>
                 </form>
             </div>
+
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-list"></i> Daftar Supplier
@@ -790,7 +754,9 @@
             </div>
         </div>
 
-        <!-- ===== TAB 3: HARGA BARANG ===== -->
+        <!-- ============================================================ -->
+        <!-- TAB 3: HARGA BARANG -->
+        <!-- ============================================================ -->
         <div class="tab-content" id="tab-prices">
             <div class="card">
                 <div class="card-title">
@@ -814,7 +780,9 @@
             </div>
         </div>
 
-        <!-- ===== TAB 4: PEMBELIAN ===== -->
+        <!-- ============================================================ -->
+        <!-- TAB 4: PEMBELIAN -->
+        <!-- ============================================================ -->
         <div class="tab-content" id="tab-purchases">
             <div class="card">
                 <div class="card-title">
@@ -840,19 +808,14 @@
             </div>
         </div>
 
-        <!-- ===== TAB 5: KELOLA ADMIN (HANYA SUPER ADMIN) ===== -->
+        <!-- ============================================================ -->
+        <!-- TAB 5: KELOLA ADMIN -->
+        <!-- ============================================================ -->
         <div class="tab-content" id="tab-admins">
+            <!-- Form Tambah Admin -->
             <div class="card">
-                <div class="card-title"><i class="fas fa-user-plus"></i> Tambah Admin Baru</div>
-                <div id="adminInfoBox">
-                    <div class="info-box" id="superAdminInfo">
-                        <i class="fas fa-crown"></i>
-                        Anda adalah <strong>Super Admin</strong>. Anda dapat menambahkan Admin baru.
-                    </div>
-                    <div class="info-box warning" id="regularAdminInfo" style="display:none;">
-                        <i class="fas fa-lock"></i>
-                        Anda adalah <strong>Admin Biasa</strong>. <span style="color:#e74c3c;font-weight:700;">HANYA Super Admin</span> yang dapat menambahkan admin baru.
-                    </div>
+                <div class="card-title">
+                    <i class="fas fa-user-plus"></i> Tambah Admin Baru
                 </div>
                 <form class="admin-form" id="adminForm">
                     <div class="form-row">
@@ -875,35 +838,15 @@
                             <input type="password" id="adminPassword" placeholder="Minimal 6 karakter" required />
                         </div>
                     </div>
-                    <div class="form-row" id="roleSelectContainer">
-                        <div>
-                            <label><i class="fas fa-user-shield"></i> Role Admin</label>
-                            <select id="adminRoleSelect">
-                                <option value="admin">Admin Biasa</option>
-                                <option value="superadmin">Super Admin</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>&nbsp;</label>
-                            <div style="padding:8px 0; font-size:0.85rem; color:#666;">
-                                <i class="fas fa-info-circle"></i>
-                                <span id="roleDesc">Super Admin bisa menambah admin lain. Admin biasa hanya kelola toko.</span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn-save" id="adminSubmitBtn">
                             <i class="fas fa-save"></i> Tambah Admin
                         </button>
                     </div>
                 </form>
-                <div id="regularAdminMessage" style="display:none; padding:20px; background:#fef9e7; border-radius:12px; text-align:center; border:2px dashed #f1c40f;">
-                    <i class="fas fa-lock" style="font-size:3rem; color:#f1c40f; margin-bottom:10px; display:block;"></i>
-                    <h3 style="color:#1a1a2e;">Akses Dibatasi</h3>
-                    <p style="color:#666; margin-top:8px;">Hanya <strong>Super Admin</strong> yang memiliki izin untuk menambahkan admin baru.</p>
-                    <p style="color:#888; font-size:0.85rem; margin-top:4px;">Hubungi Super Admin jika Anda memerlukan akses ini.</p>
-                </div>
             </div>
+
+            <!-- Daftar Admin -->
             <div class="card">
                 <div class="card-title">
                     <i class="fas fa-users"></i> Daftar Admin
@@ -926,6 +869,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- ===== TOAST ===== -->
@@ -958,6 +902,7 @@
                 users = [];
             }
 
+            // Data demo jika kosong
             if (products.length === 0) {
                 products = [{
                     id: 1,
@@ -1017,12 +962,9 @@
                 saveData();
             }
 
-            // ===== PERBAIKAN: PASTIKAN ADMIN ADALAH SUPER ADMIN =====
-            // Cek apakah admin ada
+            // Pastikan admin default ada di users
             const adminExists = users.find(u => u.username === 'admin' && u.role === 'admin');
-
             if (!adminExists) {
-                // Jika admin tidak ada, buat baru
                 users.push({
                     id: 1,
                     fullName: 'Administrator',
@@ -1032,20 +974,13 @@
                     address: '-',
                     password: 'admin123',
                     role: 'admin',
-                    isSuperAdmin: true, // <-- PASTIKAN SUPER ADMIN
+                    isSuperAdmin: true,
                     createdAt: new Date().toLocaleString()
                 });
                 saveData();
-            } else {
-                // Jika admin ada, pastikan isSuperAdmin = true
-                if (adminExists.isSuperAdmin !== true) {
-                    adminExists.isSuperAdmin = true;
-                    saveData();
-                    console.log('✅ Admin berhasil diupdate menjadi Super Admin!');
-                }
             }
 
-            // Pastikan customer ada
+            // Pastikan customer default ada
             const customerExists = users.find(u => u.username === 'customer' && u.role === 'customer');
             if (!customerExists) {
                 users.push({
@@ -1097,6 +1032,7 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
+
                 const tabId = this.dataset.tab;
                 document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 document.getElementById(tabId).classList.add('active');
@@ -1110,8 +1046,10 @@
             document.getElementById('totalProducts').textContent = products.length;
             document.getElementById('totalSuppliers').textContent = suppliers.length;
             document.getElementById('totalOrders').textContent = orders.length;
+
             const revenue = orders.filter(o => o.status === 'done').reduce((sum, o) => sum + o.total, 0);
             document.getElementById('financialReport').textContent = formatRupiah(revenue);
+
             const adminCount = users.filter(u => u.role === 'admin').length;
             document.getElementById('totalAdmins').textContent = adminCount;
         }
@@ -1119,14 +1057,17 @@
         // ================================================================
         // PRODUK: CRUD
         // ================================================================
+
         function renderProducts() {
             const tbody = document.getElementById('adminProductList');
             const count = document.getElementById('productCount');
             count.textContent = products.length + ' item';
+
             if (products.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Belum ada produk.</td></tr>';
                 return;
             }
+
             tbody.innerHTML = products.map((p, index) => `
                     <tr>
                         <td>${index + 1}</td>
@@ -1136,18 +1077,24 @@
                         <td style="max-width:200px;font-size:0.85rem;color:#555;">${p.desc.substring(0,50)}${p.desc.length > 50 ? '...' : ''}</td>
                         <td>
                             <div class="actions">
-                                <button class="btn-edit" data-id="${p.id}"><i class="fas fa-edit"></i> Edit</button>
-                                <button class="btn-danger" data-id="${p.id}"><i class="fas fa-trash"></i> Hapus</button>
+                                <button class="btn-edit" data-id="${p.id}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-danger" data-id="${p.id}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
+
             tbody.querySelectorAll('.btn-edit').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
                     editProduct(id);
                 });
             });
+
             tbody.querySelectorAll('.btn-danger').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
@@ -1161,10 +1108,12 @@
         function editProduct(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
+
             document.getElementById('editId').value = id;
             document.getElementById('prodName').value = product.name;
             document.getElementById('prodDesc').value = product.desc;
             document.getElementById('prodPrice').value = product.price;
+
             const imagePreview = document.getElementById('imagePreview');
             imagePreview.innerHTML = '';
             if (product.image) {
@@ -1172,6 +1121,7 @@
                 img.src = product.image;
                 imagePreview.appendChild(img);
             }
+
             const videoPreview = document.getElementById('videoPreview');
             videoPreview.innerHTML = '';
             if (product.video) {
@@ -1183,10 +1133,12 @@
                 video.style.borderRadius = '10px';
                 videoPreview.appendChild(video);
             }
+
             document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Produk';
             document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Produk';
             document.getElementById('submitBtn').className = 'btn-update';
             document.getElementById('cancelEditBtn').style.display = 'block';
+
             document.getElementById('productForm').scrollIntoView({ behavior: 'smooth' });
             showToast('📝 Sedang mengedit: ' + product.name, 'success');
         }
@@ -1213,6 +1165,7 @@
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
+        // Preview Gambar
         document.getElementById('prodImage').addEventListener('change', function(e) {
             const container = document.getElementById('imagePreview');
             container.innerHTML = '';
@@ -1228,6 +1181,7 @@
             }
         });
 
+        // Preview Video
         document.getElementById('prodVideo').addEventListener('change', function(e) {
             const container = document.getElementById('videoPreview');
             container.innerHTML = '';
@@ -1247,25 +1201,31 @@
             }
         });
 
+        // Submit Produk
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
             const editId = document.getElementById('editId').value;
             const name = document.getElementById('prodName').value.trim();
             const desc = document.getElementById('prodDesc').value.trim();
             const price = parseInt(document.getElementById('prodPrice').value);
             const imageFile = document.getElementById('prodImage').files[0];
             const videoFile = document.getElementById('prodVideo').files[0];
+
             if (!name || !desc || !price) {
                 showToast('Harap isi semua field!', 'error');
                 return;
             }
+
             if (editId) {
                 const product = products.find(p => p.id === parseInt(editId));
                 if (!product) return;
+
                 product.name = name;
                 product.desc = desc;
                 product.price = price;
                 product.updatedAt = new Date().toLocaleString();
+
                 let imageDone = false;
                 let videoDone = false;
 
@@ -1277,6 +1237,7 @@
                         showToast(`✅ Produk "${name}" berhasil diupdate!`, 'success');
                     }
                 }
+
                 if (imageFile) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
@@ -1288,6 +1249,7 @@
                 } else {
                     imageDone = true;
                 }
+
                 if (videoFile) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
@@ -1299,15 +1261,19 @@
                 } else {
                     videoDone = true;
                 }
+
                 checkDone();
+
             } else {
                 if (!imageFile) {
                     showToast('Harap upload gambar produk!', 'error');
                     return;
                 }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageData = e.target.result;
+
                     if (videoFile) {
                         const videoReader = new FileReader();
                         videoReader.onload = function(e2) {
@@ -1333,6 +1299,7 @@
                 video: videoData || '',
                 updatedAt: new Date().toLocaleString()
             };
+
             products.push(newProduct);
             saveData();
             renderAll();
@@ -1343,14 +1310,17 @@
         // ================================================================
         // SUPPLIER: CRUD
         // ================================================================
+
         function renderSuppliers() {
             const tbody = document.getElementById('supplierList');
             const count = document.getElementById('supplierCount');
             count.textContent = suppliers.length + ' supplier';
+
             if (suppliers.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Belum ada supplier.</td></tr>';
                 return;
             }
+
             tbody.innerHTML = suppliers.map((s, index) => `
                     <tr>
                         <td>${index + 1}</td>
@@ -1360,18 +1330,24 @@
                         <td style="max-width:200px;font-size:0.85rem;color:#555;">${s.address}</td>
                         <td>
                             <div class="actions">
-                                <button class="btn-edit" data-id="${s.id}"><i class="fas fa-edit"></i> Edit</button>
-                                <button class="btn-danger" data-id="${s.id}"><i class="fas fa-trash"></i> Hapus</button>
+                                <button class="btn-edit" data-id="${s.id}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-danger" data-id="${s.id}">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </div>
                         </td>
                     </tr>
                 `).join('');
+
             tbody.querySelectorAll('.btn-edit').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
                     editSupplier(id);
                 });
             });
+
             tbody.querySelectorAll('.btn-danger').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.dataset.id);
@@ -1388,14 +1364,17 @@
         function editSupplier(id) {
             const supplier = suppliers.find(s => s.id === id);
             if (!supplier) return;
+
             document.getElementById('editSupplierId').value = id;
             document.getElementById('supplierName').value = supplier.name;
             document.getElementById('supplierPhone').value = supplier.phone;
             document.getElementById('supplierEmail').value = supplier.email;
             document.getElementById('supplierAddress').value = supplier.address;
+
             document.getElementById('supplierSubmitBtn').innerHTML = '<i class="fas fa-save"></i> Update Supplier';
             document.getElementById('supplierSubmitBtn').className = 'btn-update';
             document.getElementById('cancelEditSupplierBtn').style.display = 'block';
+
             document.getElementById('supplierForm').scrollIntoView({ behavior: 'smooth' });
             showToast('📝 Sedang mengedit supplier: ' + supplier.name, 'success');
         }
@@ -1414,15 +1393,18 @@
 
         document.getElementById('supplierForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
             const editId = document.getElementById('editSupplierId').value;
             const name = document.getElementById('supplierName').value.trim();
             const phone = document.getElementById('supplierPhone').value.trim();
             const email = document.getElementById('supplierEmail').value.trim();
             const address = document.getElementById('supplierAddress').value.trim();
+
             if (!name || !phone || !email || !address) {
                 showToast('Harap isi semua field!', 'error');
                 return;
             }
+
             if (editId) {
                 const supplier = suppliers.find(s => s.id === parseInt(editId));
                 if (supplier) {
@@ -1436,7 +1418,13 @@
                     showToast(`✅ Supplier "${name}" berhasil diupdate!`, 'success');
                 }
             } else {
-                const newSupplier = { id: generateId(), name: name, phone: phone, email: email, address: address };
+                const newSupplier = {
+                    id: generateId(),
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address
+                };
                 suppliers.push(newSupplier);
                 saveData();
                 renderAll();
@@ -1448,14 +1436,17 @@
         // ================================================================
         // HARGA BARANG (View)
         // ================================================================
+
         function renderPrices() {
             const tbody = document.getElementById('priceList');
             const count = document.getElementById('priceCount');
             count.textContent = products.length + ' item';
+
             if (products.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">Belum ada produk.</td></tr>';
                 return;
             }
+
             tbody.innerHTML = products.map((p, index) => `
                     <tr>
                         <td>${index + 1}</td>
@@ -1470,20 +1461,24 @@
         // ================================================================
         // PEMBELIAN (View Orders)
         // ================================================================
+
         function renderPurchases() {
             const tbody = document.getElementById('purchaseList');
             const count = document.getElementById('purchaseCount');
             count.textContent = orders.length + ' transaksi';
+
             if (orders.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="empty-msg">Belum ada pembelian.</td></tr>';
                 return;
             }
+
             const statusMap = {
                 unpaid: { label: 'Belum Dibayar', cls: 'status-unpaid' },
                 process: { label: 'Diproses', cls: 'status-process' },
                 shipped: { label: 'Dikirim', cls: 'status-shipped' },
                 done: { label: 'Selesai', cls: 'status-done' }
             };
+
             const sorted = [...orders].reverse();
             tbody.innerHTML = sorted.map(o => {
                 const st = statusMap[o.status] || statusMap.unpaid;
@@ -1507,6 +1502,7 @@
                         </tr>
                     `;
             }).join('');
+
             tbody.querySelectorAll('.order-status-select').forEach(sel => {
                 sel.addEventListener('change', function() {
                     const id = parseInt(this.dataset.orderId);
@@ -1523,91 +1519,74 @@
         }
 
         // ================================================================
-        // KELOLA ADMIN (HANYA SUPER ADMIN BISA TAMBAH)
+        // KELOLA ADMIN
         // ================================================================
+
         function renderAdmins() {
             const tbody = document.getElementById('adminList');
             const count = document.getElementById('adminCount');
             const adminUsers = users.filter(u => u.role === 'admin');
             count.textContent = adminUsers.length + ' admin';
+
             if (adminUsers.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">Belum ada admin.</td></tr>';
                 return;
             }
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            tbody.innerHTML = adminUsers.map((u, index) => {
-                let roleBadge = '';
-                if (u.isSuperAdmin) {
-                    roleBadge = '<span class="badge-super">Super Admin</span>';
-                    if (u.id === 1) {
-                        roleBadge += ' <span class="badge-owner">Owner</span>';
-                    }
-                } else {
-                    roleBadge = '<span class="badge-admin">Admin</span>';
-                }
-                let actions = '';
-                if (u.id !== 1) {
-                    if (isSuperAdmin) {
-                        actions = `
-                            <button class="btn-danger" data-id="${u.id}" onclick="deleteAdmin(${u.id})">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        `;
-                    } else {
-                        actions = '<span style="font-size:0.8rem;color:#888;">Tidak bisa hapus</span>';
-                    }
-                } else {
-                    actions = '<span style="font-size:0.8rem;color:#888;">Tidak bisa dihapus</span>';
-                }
-                return `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td><strong>${u.fullName}</strong></td>
-                            <td>${u.email}</td>
-                            <td>${u.username}</td>
-                            <td>${roleBadge}</td>
-                            <td>
-                                <div class="actions">
-                                    ${actions}
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-            }).join('');
+
+            tbody.innerHTML = adminUsers.map((u, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${u.fullName}</strong></td>
+                        <td>${u.email}</td>
+                        <td>${u.username}</td>
+                        <td>
+                            ${u.isSuperAdmin ? '<span class="badge-super">Super Admin</span>' : '<span class="badge-admin">Admin</span>'}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                ${!u.isSuperAdmin ? `
+                                    <button class="btn-danger" data-id="${u.id}" onclick="deleteAdmin(${u.id})">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                ` : `
+                                    <span style="font-size:0.8rem;color:#888;">Tidak bisa dihapus</span>
+                                `}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
         }
 
-        // ================================================================
-        // TAMBAH ADMIN - HANYA SUPER ADMIN
-        // ================================================================
+        // Tambah Admin
         document.getElementById('adminForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            if (!isSuperAdmin) {
-                showToast('❌ HANYA Super Admin yang dapat menambahkan admin baru!', 'error');
-                return;
-            }
+
             const fullName = document.getElementById('adminFullName').value.trim();
             const email = document.getElementById('adminEmailInput').value.trim();
             const username = document.getElementById('adminUsername').value.trim();
             const password = document.getElementById('adminPassword').value;
-            const role = document.getElementById('adminRoleSelect').value;
+
             if (!fullName || !email || !username || !password) {
                 showToast('Harap isi semua field!', 'error');
                 return;
             }
+
             if (password.length < 6) {
                 showToast('Password minimal 6 karakter!', 'error');
                 return;
             }
+
+            // Cek username sudah ada
             if (users.find(u => u.username === username)) {
                 showToast('Username sudah digunakan!', 'error');
                 return;
             }
+
             if (users.find(u => u.email === email)) {
                 showToast('Email sudah terdaftar!', 'error');
                 return;
             }
-            const isSuperAdminValue = role === 'superadmin';
+
             const newAdmin = {
                 id: generateId(),
                 fullName: fullName,
@@ -1617,62 +1596,31 @@
                 address: '-',
                 password: password,
                 role: 'admin',
-                isSuperAdmin: isSuperAdminValue,
+                isSuperAdmin: false,
                 createdAt: new Date().toLocaleString()
             };
+
             users.push(newAdmin);
             saveData();
             renderAll();
             document.getElementById('adminForm').reset();
-            const roleText = isSuperAdminValue ? 'Super Admin' : 'Admin';
-            showToast(`✅ ${roleText} "${fullName}" berhasil ditambahkan!`, 'success');
+            showToast(`✅ Admin "${fullName}" berhasil ditambahkan!`, 'success');
         });
 
-        // ================================================================
-        // HAPUS ADMIN - HANYA SUPER ADMIN
-        // ================================================================
+        // Hapus Admin
         function deleteAdmin(id) {
+            if (!confirm('Yakin ingin menghapus admin ini?')) return;
+
             const admin = users.find(u => u.id === id);
-            if (!admin) return;
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            if (!isSuperAdmin) {
-                showToast('❌ HANYA Super Admin yang dapat menghapus admin!', 'error');
+            if (admin && admin.isSuperAdmin) {
+                showToast('❌ Super Admin tidak bisa dihapus!', 'error');
                 return;
             }
-            if (admin.id === 1) {
-                showToast('❌ Owner tidak bisa dihapus!', 'error');
-                return;
-            }
-            if (!confirm(`Yakin ingin menghapus admin "${admin.fullName}"?`)) return;
+
             users = users.filter(u => u.id !== id);
             saveData();
             renderAll();
-            showToast(`🗑️ Admin "${admin.fullName}" berhasil dihapus!`, 'error');
-        }
-
-        // ================================================================
-        // UPDATE UI BERDASARKAN ROLE
-        // ================================================================
-        function updateAdminUI() {
-            const isSuperAdmin = currentUser && currentUser.isSuperAdmin === true;
-            const superAdminInfo = document.getElementById('superAdminInfo');
-            const regularAdminInfo = document.getElementById('regularAdminInfo');
-            const adminForm = document.getElementById('adminForm');
-            const regularMessage = document.getElementById('regularAdminMessage');
-            const roleSelectContainer = document.getElementById('roleSelectContainer');
-            if (isSuperAdmin) {
-                superAdminInfo.style.display = 'block';
-                regularAdminInfo.style.display = 'none';
-                adminForm.style.display = 'block';
-                regularMessage.style.display = 'none';
-                roleSelectContainer.style.display = 'grid';
-            } else {
-                superAdminInfo.style.display = 'none';
-                regularAdminInfo.style.display = 'block';
-                adminForm.style.display = 'none';
-                regularMessage.style.display = 'block';
-                roleSelectContainer.style.display = 'none';
-            }
+            showToast('🗑️ Admin berhasil dihapus!', 'error');
         }
 
         // ================================================================
@@ -1685,7 +1633,6 @@
             renderPrices();
             renderPurchases();
             renderAdmins();
-            updateAdminUI();
         }
 
         // ================================================================
@@ -1713,16 +1660,6 @@
                 }
                 document.getElementById('adminName').textContent = currentUser.fullName || currentUser.username || 'Admin';
                 document.getElementById('adminEmail').textContent = currentUser.email || 'admin@gadgetstore.com';
-                const roleBadge = document.getElementById('adminRoleBadge');
-                if (currentUser.isSuperAdmin) {
-                    roleBadge.textContent = '⭐ Super Admin';
-                    roleBadge.style.background = '#f1c40f';
-                    roleBadge.style.color = '#1a1a2e';
-                } else {
-                    roleBadge.textContent = '👤 Admin Biasa';
-                    roleBadge.style.background = '#0f3460';
-                    roleBadge.style.color = 'white';
-                }
             } catch (e) {
                 window.location.href = 'login.html';
             }
